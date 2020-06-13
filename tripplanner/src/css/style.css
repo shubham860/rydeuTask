@@ -7,3 +7,31 @@
   color :rgba(0, 0, 0, 0.85);
   font-size: 14px;
 }
+
+.head{
+  font-size: 17px;
+  font-weight : 500;
+}
+
+.heads{
+  font-size: 14px;
+  font-weight : 600;
+}
+
+.icon{
+  padding: 0 7px;
+  font-size: 20px;
+}
+
+.btn{
+  border: 0;
+}
+
+.cardData{
+  margin : 20px !important;
+}
+
+.infoCard{
+  width : 1000px;
+  margin: 20px;
+}
