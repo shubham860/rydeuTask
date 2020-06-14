@@ -1,16 +1,16 @@
-import React,{useState} from "react";
-import CardPanel from './Card';
+import React, {useState} from "react";
+import CardPanel from './CardPanel';
 import '../css/style.css'
-import { Modal, Button, Row, Form, Col, Input, Select, InputNumber,} from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import {Modal, Button, Row, Form, Col, Input, Select, InputNumber,DatePicker,TimePicker} from 'antd';
+import {PlusOutlined} from '@ant-design/icons';
 import {connect} from 'react-redux';
 import 'antd/dist/antd.css';
-import {createTransfer, deleteTransfer} from "../Redux/Actions";
-const { Option } = Select;
+import {createTransfer, deleteTransfer, updateTransfer} from "../Redux/Actions";
+
+const {Option} = Select;
 
 
-
-const Main = (props) => {
+const Main = ({transfer, onDelete, onAddTransfer, onUpdate}) => {
     const [visible, setVisible] = useState(false);
     const [form] = Form.useForm();
 
@@ -20,7 +20,13 @@ const Main = (props) => {
 
     const handleOk = async () => {
         const fieldsValue = await form.validateFields();
-        props.onAddTransfer(fieldsValue)
+        const data = {
+            ...fieldsValue,
+            date: fieldsValue['date'].format('YYYY-MM-DD'),
+            time: fieldsValue['time'].format('HH:mm:ss')
+        }
+
+        onAddTransfer(data)
         form.resetFields();
         setVisible(false);
     };
@@ -30,9 +36,12 @@ const Main = (props) => {
         setVisible(false)
     };
 
-    console.log('mainData',props)
+    const config = {
+        rules: [{ type: 'object', required: true, message: 'Please select time!' }],
+    };
 
-    return(
+
+    return (
         <div className="main">
             <Row justify="center" align="middle">
                 <Button type="primary" onClick={showModal}>
@@ -44,17 +53,14 @@ const Main = (props) => {
                     visible={visible}
                     onOk={handleOk}
                     onCancel={handleCancel}
+                    width='700px'
                 >
-                    <Form form={form}>
-                        <Row>
+                    <Form
+                        form={form}
+                        hideRequiredMark={true}>
+                        <Row gutter={[16, 16]}>
                             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                                 <Form.Item
-                                    labelCol={{
-                                        span: 9,
-                                    }}
-                                    wrapperCol={{
-                                        span: 12,
-                                    }}
                                     label="First Name"
                                     name="firstName"
                                     rules={[
@@ -65,19 +71,13 @@ const Main = (props) => {
                                         },
                                     ]}
                                 >
-                                    <Input placeholder="first name" />
+                                    <Input placeholder="first name"/>
                                 </Form.Item>
 
                             </Col>
 
                             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                                 <Form.Item
-                                    labelCol={{
-                                        span: 9,
-                                    }}
-                                    wrapperCol={{
-                                        span: 12,
-                                    }}
                                     label="Last Name"
                                     name="lastName"
                                     rules={[
@@ -88,23 +88,34 @@ const Main = (props) => {
                                         },
                                     ]}
                                 >
-                                    <Input placeholder="last name" />
+                                    <Input placeholder="last name"/>
                                 </Form.Item>
                             </Col>
                         </Row>
 
-                        <Row>
-                            <Col>
-                                <Form.Item label="Vechile Type: "
-                                           name="vechileType"
-                                           rules={[{ required: true, message: 'Please select your country!' }]}
-                                           labelCol={{
-                                               span: 9,
-                                           }}
-                                           wrapperCol={{
-                                               span: 12,
-                                           }}>
-                                    <Select placeholder="Please select a vechile" >
+
+                        <Row gutter={[16, 16]}>
+                            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                               <Form.Item name="date" label="DatePicker" {...config}>
+                                  <DatePicker />
+                               </Form.Item>
+                            </Col>
+
+                            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                                <Form.Item name="time" label="TimePicker" {...config}>
+                                    <TimePicker />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={[16, 16]}>
+                            <Col xs={24} sm={24} md={15} lg={15} xl={15}>
+                                <Form.Item
+                                     label="Vechile Type"
+                                     name="vechileType"
+                                     rules={[{required: true, message: 'Please select your country!'}]}
+                                >
+                                    <Select placeholder="Please select a vechile">
                                         <Option value="Standard">Standard</Option>
                                         <Option value="Premium">Premium</Option>
                                         <Option value="Luxury Coaches">Luxury Coaches</Option>
@@ -113,66 +124,70 @@ const Main = (props) => {
                                     </Select>
                                 </Form.Item>
                             </Col>
-                            <Col>
-                                <Form.Item name="vechileCount" label="" rules={[{ type: 'number', min: 0, max: 5 }]}>
-                                    <InputNumber placeholder='count' />
+
+                            <Col xs={24} sm={24} md={9} lg={9} xl={9}>
+                                <Form.Item
+                                    name="vechileCount"
+                                    label=""
+                                    rules={[{type: 'number', min: 0, max: 5}]}>
+                                    <InputNumber placeholder='count'/>
                                 </Form.Item>
                             </Col>
                         </Row>
 
 
-                        <Row>
-                            <Col xs={7} sm={7} md={7} lg={7} xl={7}>
+                        <Row gutter={[16, 16]}>
+                            <Col xs={24} sm={24} md={6} lg={6} xl={6}>
                                 <Row align="middle">
-                                    <p className='labels'>Passenger Count </p>
+                                    <p className='labels'>Passenger Count:</p>
                                 </Row>
                             </Col>
-                            <Col xs={17} sm={17} md={17} lg={17} xl={17}>
+                            <Col xs={24} sm={24} md={18} lg={18} xl={18}>
                                 <Row>
-                                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                        <Form.Item name="Adult" label="Adult" rules={[{ type: 'number', min: 0, max: 5 }]}>
-                                            <InputNumber placeholder='count' />
+                                    <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                        <Form.Item name="Adult" label="Adult"
+                                                   rules={[{type: 'number', min: 0, max: 5}]}>
+                                            <InputNumber placeholder='count'/>
                                         </Form.Item>
                                     </Col>
-                                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                        <Form.Item name="Children" label="Children" rules={[{ type: 'number', min: 0, max: 5 }]}>
-                                            <InputNumber placeholder='count' />
+                                    <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                                        <Form.Item name="Children" label="Children"
+                                                   rules={[{type: 'number', min: 0, max: 5}]}>
+                                            <InputNumber placeholder='count'/>
                                         </Form.Item>
                                     </Col>
                                 </Row>
                             </Col>
                         </Row>
 
-
-                        <Row>
+                        <Row xs={24} sm={24} md={12} lg={12} xl={12}>
                             <Col>
-                                <Form.Item label="Pickup Location: "
-                                           name="pickUpLocation"
-                                           rules={[{ required: true, message: 'please fill pickup location' }]}
-                                           labelCol={{
-                                               span: 10,
-                                           }}
-                                           wrapperCol={{
-                                               span: 12,
-                                           }}>
-                                    <Input placeholder="Pickup location" />
+                                <Form.Item label="City"
+                                           name="city"
+                                           rules={[{required: true, message: 'please fill pickup city'}]}
+                                >
+                                    <Input placeholder="city"/>
                                 </Form.Item>
                             </Col>
+
                         </Row>
 
+                        <Row gutter={[16, 16]}>
+                            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                                <Form.Item label="Pickup Location"
+                                           name="pickUpLocation"
+                                           rules={[{required: true, message: 'please fill pickup location'}]}
+                                >
+                                    <Input placeholder="Pickup location"/>
+                                </Form.Item>
+                            </Col>
 
-                        <Row>
-                            <Col>
-                                <Form.Item label="Drop Location: "
+                            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                                <Form.Item label="Drop Location"
                                            name="dropLocation"
-                                           rules={[{ required: true, message: 'please fill drop location' }]}
-                                           labelCol={{
-                                               span: 10,
-                                           }}
-                                           wrapperCol={{
-                                               span: 12,
-                                           }}>
-                                    <Input placeholder="Drop location"  />
+                                           rules={[{required: true, message: 'please fill drop location'}]}
+                                >
+                                    <Input placeholder="Drop location"/>
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -181,9 +196,10 @@ const Main = (props) => {
                 </Modal>
             </Row>
 
-            <Row justify="center" style={{margin:"50px 0"}}>
+            <Row justify="center" style={{margin: "50px 0"}}>
                 {
-                    Object.keys(props).map(item => <CardPanel data={props[item]} onDelete={props.onDelete}/>)
+                    transfer?.map(item => <CardPanel transfer={item} onDelete={onDelete} onUpdate={onUpdate}
+                                                     key={item.id}/>)
                 }
             </Row>
         </div>
@@ -192,18 +208,21 @@ const Main = (props) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onAddTransfer: post => {
-            dispatch(createTransfer(post));
-        },
-        onDelete : id => {
+        onAddTransfer: post => [
+            dispatch(createTransfer(post))
+        ],
+        onDelete: id => {
             dispatch(deleteTransfer(id));
+        },
+        onUpdate: data => {
+            dispatch(updateTransfer(data))
         }
     };
 };
 
 
 const mapStateToProps = (state) => {
-    return state;
+    return {transfer: state};
 }
 
-export default connect(mapStateToProps , mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

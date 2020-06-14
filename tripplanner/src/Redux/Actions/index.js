@@ -8,10 +8,10 @@ export const createTransfer = (obj) => ({
 
 export const deleteTransfer = id => ({
     type: DELETE_TRANSFER,
-    payload: id
+    payload: {id}
 });
 
-export const udpdateTransfer = obj => ({
+export const updateTransfer = obj => ({
     type: UPDATE_TRANSFER,
-    payload: obj
+    payload: {...obj}
 });

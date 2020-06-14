@@ -21,6 +21,7 @@
 .icon{
   padding: 0 7px;
   font-size: 20px;
+  color: #1890ff;
 }
 
 .btn{
@@ -34,4 +35,9 @@
 .infoCard{
   width : 1000px;
   margin: 20px;
+}
+
+.smallCard{
+  border-left: 2px solid #1890ff;
+  margin: 0 20px;
 }
