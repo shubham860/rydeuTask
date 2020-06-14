@@ -5,7 +5,7 @@ import { Modal, Button, Row, Form, Col, Input, Select, InputNumber,} from 'antd'
 import { PlusOutlined } from '@ant-design/icons';
 import {connect} from 'react-redux';
 import 'antd/dist/antd.css';
-import {createTransfer} from "../Redux/Actions";
+import {createTransfer, deleteTransfer} from "../Redux/Actions";
 const { Option } = Select;
 
 
@@ -30,6 +30,7 @@ const Main = (props) => {
         setVisible(false)
     };
 
+    console.log('mainData',props)
 
     return(
         <div className="main">
@@ -182,7 +183,7 @@ const Main = (props) => {
 
             <Row justify="center" style={{margin:"50px 0"}}>
                 {
-                    Object.keys(props).map(item => <CardPanel data={props[item]}/>)
+                    Object.keys(props).map(item => <CardPanel data={props[item]} onDelete={props.onDelete}/>)
                 }
             </Row>
         </div>
@@ -193,6 +194,9 @@ const mapDispatchToProps = dispatch => {
     return {
         onAddTransfer: post => {
             dispatch(createTransfer(post));
+        },
+        onDelete : id => {
+            dispatch(deleteTransfer(id));
         }
     };
 };
