@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import CardPanel from './CardPanel';
 import '../css/style.css'
-import {Modal, Button, Row, Form, Col, Input, Select, InputNumber,DatePicker,TimePicker} from 'antd';
+import {Modal, Button, Row, Form, Col, Input, Select, InputNumber,DatePicker,TimePicker, Empty, PageHeader} from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
 import {connect} from 'react-redux';
 import 'antd/dist/antd.css';
@@ -12,6 +12,7 @@ const {Option} = Select;
 
 const Main = ({transfer, onDelete, onAddTransfer, onUpdate}) => {
     const [visible, setVisible] = useState(false);
+    const [empty, setEmpty] = useState(true)
     const [form] = Form.useForm();
 
     const showModal = () => {
@@ -19,10 +20,11 @@ const Main = ({transfer, onDelete, onAddTransfer, onUpdate}) => {
     };
 
     const handleOk = async () => {
+        setEmpty(false)
         const fieldsValue = await form.validateFields();
         const data = {
             ...fieldsValue,
-            date: fieldsValue['date'].format('YYYY-MM-DD'),
+            date: fieldsValue['date'].format('DD-MM-YYYY'),
             time: fieldsValue['time'].format('HH:mm:ss')
         }
 
@@ -41,7 +43,18 @@ const Main = ({transfer, onDelete, onAddTransfer, onUpdate}) => {
     };
 
 
+
+
     return (
+        <PageHeader
+            className="site-page-header"
+
+            title="Frontend Task"
+            subTitle="-Shubham Chauhan"
+            extra={[
+                <p className="date">React | React-Redux</p>
+            ]}
+        >,
         <div className="main">
             <Row justify="center" align="middle">
                 <Button type="primary" onClick={showModal}>
@@ -198,11 +211,15 @@ const Main = ({transfer, onDelete, onAddTransfer, onUpdate}) => {
 
             <Row justify="center" style={{margin: "50px 0"}}>
                 {
-                    transfer?.map(item => <CardPanel transfer={item} onDelete={onDelete} onUpdate={onUpdate}
-                                                     key={item.id}/>)
+                    empty ? <Empty/> : null
+                }
+                {
+                    transfer?.map((item,index) => <CardPanel transfer={item} onDelete={onDelete} onUpdate={onUpdate}
+                                                     key={item.id} index={index+1} setEmpty={setEmpty}/>)
                 }
             </Row>
         </div>
+        </PageHeader>
     )
 };
 

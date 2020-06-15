@@ -11,10 +11,9 @@ import {
     DeleteOutlined
 } from '@ant-design/icons';
 import '../css/style.css'
-import {deleteTransfer} from "../Redux/Actions";
 import UpdateModel from "./updateModel";
 
-const CardPanel = ({transfer, onDelete, onUpdate}) => {
+const CardPanel = ({transfer, onDelete, onUpdate,index}) => {
     const [show, setShow] = useState(false)
     const [updateModalVisible, handleUpdateModalVisible] = useState(false);
 
@@ -24,17 +23,20 @@ const CardPanel = ({transfer, onDelete, onUpdate}) => {
     }
 
     const {Adult, Children, dropLocation, firstName, id, lastName, pickUpLocation, vechileCount, vechileType, date, time, city} = transfer;
-
-
     return (
         <Row justify="center">
-            {
-                id ? (<Col key={id}>
+                    <Col key={id}>
                     <Card className="infoCard">
                         <Row>
-                            <Card className='smallCard'>
+                            <Col>
+                                <Card className='smallCard' bodyStyle={{padding:0}}>
+                                    <p className='date'>{date.slice(0,5)}</p>
+                                </Card>
+                            </Col>
+                            <Col>
+                                <p className="dayHead">Day {index}</p>
+                            </Col>
 
-                            </Card>
                         </Row>
                         <Row justify="center">
                             <Card className="infoCard">
@@ -155,12 +157,11 @@ const CardPanel = ({transfer, onDelete, onUpdate}) => {
                                         </div>
                                     )
                                 }
-
                             </Card>
                         </Row>
                     </Card>
-                </Col>) : <Empty/>
-            }
+                </Col>
+
 
             <UpdateModel
                 onSubmit={transfer => onUpdate(transfer)}

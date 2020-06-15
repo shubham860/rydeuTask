@@ -59,7 +59,8 @@ const UpdateModel = (props) => {
                     lastName,
                     pickUpLocation,
                     vechileCount,
-                    vechileType
+                    vechileType,
+                    city
                 }}
                 hideRequiredMark={true}>
                 <Row gutter={[16, 16]}>
@@ -101,7 +102,7 @@ const UpdateModel = (props) => {
                 <Row gutter={[16, 16]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
                         <Form.Item name="date" label="DatePicker" {...config}>
-                            <DatePicker defaultValue={moment(date, 'YYYY/MM/DD')}/>
+                            <DatePicker defaultValue={moment(date, 'DD/MM/YYYY')}/>
                         </Form.Item>
                     </Col>
 
