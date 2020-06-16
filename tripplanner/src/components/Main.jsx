@@ -48,7 +48,6 @@ const Main = ({transfer, onDelete, onAddTransfer, onUpdate}) => {
     return (
         <PageHeader
             className="site-page-header"
-
             title="Frontend Task"
             subTitle="-Shubham Chauhan"
             extra={[
