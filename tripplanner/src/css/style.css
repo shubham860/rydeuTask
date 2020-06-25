@@ -39,14 +39,12 @@
   }
 }
 
-
 @media (min-width: 577px) {
   .infoCard{
     width : 1000px;
     margin: 20px;
   }
 }
-
 
 .smallCard{
   border-left: 3px solid #1890ff;
